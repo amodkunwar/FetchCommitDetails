@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,13 +25,13 @@ public class GitController {
 
 	@GetMapping("/git-stats")
 	public CommitStats getGitStats(@RequestParam String repositoryUrl, @RequestParam String username,
-			@RequestParam String password, @RequestParam String startDate, @RequestParam String endDate)
-			throws IOException, ParseException, NoHeadException, GitAPIException {
+			@RequestParam String password, @RequestParam String startDate, @RequestParam String endDate,
+			@RequestParam String path) throws IOException, ParseException, NoHeadException, GitAPIException {
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Date parsedStartDate = dateFormat.parse(startDate);
 		Date parsedEndDate = dateFormat.parse(endDate);
-
-		return gitService.fetchGitStats(repositoryUrl, username, password, parsedStartDate, parsedEndDate);
+		return gitService.fetchGitStats(repositoryUrl, username, password, parsedStartDate, parsedEndDate, path);
 	}
+
 }
