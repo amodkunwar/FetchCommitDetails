@@ -22,20 +22,36 @@ import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.CommitStats;
+import com.example.demo.dto.CommitStats;
 
 @Service
 public class GitService {
 
-	public CommitStats fetchGitStats(String repositoryUrl, String username, String password, Date startDate,
-			Date endDate, String path) throws IOException, GitAPIException {
+	@Value("${password}")
+	private String password;
+
+	/**
+	 * 
+	 * @param repositoryUrl
+	 * @param username
+	 * @param startDate
+	 * @param endDate
+	 * @param path
+	 * @param branch
+	 * @return
+	 * @throws IOException
+	 * @throws GitAPIException
+	 */
+	public CommitStats fetchGitStats(String repositoryUrl, String username, Date startDate, Date endDate, String path,
+			String branch) throws IOException, GitAPIException {
 		String projectName = repositoryUrl.substring(30);
-		path = path + ":/gitTestingCheck/" + projectName;
+		path = path + projectName;
 		File folder = new File(path);
 		Git git = null;
-		CloneCommand cloneCommand = Git.cloneRepository().setBranch("master").setURI(repositoryUrl);
+		CloneCommand cloneCommand = Git.cloneRepository().setBranch(branch).setURI(repositoryUrl);
 		if (folder.exists()) {
 			git = Git.open(folder);
 			PullCommand pull = git.pull();
