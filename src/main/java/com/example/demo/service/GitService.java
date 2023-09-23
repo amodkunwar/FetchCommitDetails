@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.PullCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
@@ -37,14 +38,15 @@ public class GitService {
 		CloneCommand cloneCommand = Git.cloneRepository().setBranch("master").setURI(repositoryUrl);
 		if (folder.exists()) {
 			git = Git.open(folder);
-			git.pull();
+			PullCommand pull = git.pull();
+			pull.call();
 		} else {
 			git = cloneCommand.setDirectory(folder)
 					.setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, password)).call();
 		}
 		Repository repository = git.getRepository();
 
-		Iterable<RevCommit> commits = git.log().add(repository.resolve("master")).call();
+		Iterable<RevCommit> commits = git.log().add(repository.resolve("HEAD")).call();
 
 		int totalCommits = 0;
 		int totalLinesAdded = 0;
