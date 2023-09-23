@@ -67,6 +67,14 @@ public class GitService {
 		return new CommitStats(totalCommits, totalLinesAdded);
 	}
 
+	/**
+	 * 
+	 * @param repository
+	 * @param commit
+	 * @return
+	 * @throws IOException
+	 * @throws GitAPIException
+	 */
 	private List<DiffEntry> getDiffs(Repository repository, RevCommit commit) throws IOException, GitAPIException {
 		RevCommit parent = commit.getParent(0);
 		if (parent == null) {
@@ -80,6 +88,13 @@ public class GitService {
 		}
 	}
 
+	/**
+	 * 
+	 * @param repository
+	 * @param objectId
+	 * @return
+	 * @throws IOException
+	 */
 	private CanonicalTreeParser prepareTreeParser(Repository repository, ObjectId objectId) throws IOException {
 		try (RevWalk walk = new RevWalk(repository)) {
 			RevCommit commit = walk.parseCommit(objectId);
@@ -92,6 +107,12 @@ public class GitService {
 		}
 	}
 
+	/**
+	 * @param repository
+	 * @param entry
+	 * @return
+	 * @throws IOException
+	 */
 	private int countLinesAdded(Repository repository, DiffEntry entry) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		try (DiffFormatter formatter = new DiffFormatter(out)) {
